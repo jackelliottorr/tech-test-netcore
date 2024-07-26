@@ -23,3 +23,22 @@ I added some testing in RelevantTodoListsTests.cs. I tend to use Given When Then
 I'm using Microsoft.EntityFrameworkCore.InMemory for speed and handiness, aware that Microsoft advise against using it -  https://learn.microsoft.com/en-us/ef/core/testing/testing-without-the-database#inmemory-provider.
 Typically I prefer using TestContainers.NET for any tests that hit the database. LINQ providers can be funny and it's nice to replicate production as much as possible if the effort and test times are't too much. With TestContainers.NET, I usually create a Fixture that can be used across numerous atomic tests. If for some reason tests must depend on shared state, I've used libraries like Respawn in the past to revert changes from other tests.
 I added some additional test builder classes to make the arrange code more declarative and draw attention to the important parts of the test (the list owner vs task owner difference). If I was being more thorough, I'd have refactored the existing test and builder but I didn't want to spend too much time on that.
+
+# Task 7
+For simplicity, and as there wasn't much detail in the requirements, I've made it a nullable integer field and have allowed duplicate values. 
+
+Other options I considered:
+1. Performing validation on the post to check if the rank was already taken, but this would be a bad user experience.
+2. If the rank was set to the same rank of existing TodoItems, reduce the rank of the existing item (recursively to prevent duplicates).
+3. Some sort of drag and drop/reordering component, but I think that's past the scope and time of this challenge given that I have other tasks to complete.
+
+dotnet ef migrations add AddRankToTodoItemModel
+dotnet ef database update
+
+While adding rank to the frontend, I noticed that TodoItemCreateFields and TodoItemEditFields didn't have any validation attributes. Using System.ComponentModel.DataAnnotations I added a few basic validation attributes such as Required and Length. I'd usually use attributes to create a whitelist of allowed characters for inputs to prevent stored and reflected XSS. 
+
+I removed "Add new item" from the list and made it a button for 2 reasons:
+1. This feels like a less confusing user experience, decoupling the listview from adding a new item.
+2. It reduces the complexity of the JavaScript sorting code as I don't have to account for that list item.
+
+Given that an earlier requirement was to implement sorting by importance, I made sure that ranked sorting didn't affect this. Items are sorted primarily by rank, then by importance within a rank.

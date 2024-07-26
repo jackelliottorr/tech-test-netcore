@@ -16,14 +16,9 @@
         <label class="form-check-label" id="lblToggleCompleted" for="toggleCompleted">Hide completed todo items</label>
     </div>
 
+    <button id="sortByRank" class="btn btn-primary">Sort by Rank</button>
+
     <ul class="list-group">
-
-        <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
-                <strong>Add New Item</strong>
-            </a>
-        </li>
-
         @foreach (var item in Model.Items.OrderBy(x => x.Importance))
         {
             string contextualClass;
@@ -40,41 +35,55 @@
                     break;
             }
 
+            var stringRank = item.Rank.GetValueOrDefault() > 0 ? $"{item.Rank.Value}." : "-";
+
             <li class="list-group-item @contextualClass"
-                data-completed="@(item.IsDone ? "true" : "false")">
+                data-completed="@(item.IsDone ? "true" : "false")"
+                data-rank="@item.Rank">
                 
                 <div class="row">
 
-                <div class="col-md-8">
-                    <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
+                    <div class="col-md-2">
+                        <span>@stringRank</span>
+                    </div>
 
-                        @if (item.IsDone)
-                        {
-                            <s>@item.Title</s>
-                        }
-                        else
-                        {
-                            <text>@item.Title</text>
-                        }
-                    </a>
-                </div>
+                    <div class="col-md-6">
+                        <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
 
-                <div class="col-md-4 text-right">
-                    <small>
-                        @item.ResponsibleParty.UserName
+                            @if (item.IsDone)
+                            {
+                                <s>@item.Title</s>
+                            }
+                            else
+                            {
+                                <text>@item.Title</text>
+                            }
+                        </a>
+                    </div>
 
-                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+                    <div class="col-md-4 text-right">
+                        <small>
+                            @item.ResponsibleParty.UserName
 
-                    </small>
-                </div>
+                            <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+
+                        </small>
+                    </div>
                 </div>
 
             </li>
         }
     </ul>
+
+    <div class="mb-3">
+        <a class="btn btn-success" asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
+            <strong>Add New Item</strong>
+        </a>
+    </div>
 </div>
 
 @section Scripts
 {
     <script src="~/js/hideCompletedTodoItems.js"></script>
+    <script src="~/js/orderByRank.js"></script>
 }
