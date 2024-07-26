@@ -9,3 +9,6 @@ Debugged through the failing test to see where the value was being dropped and f
 
 # Task 4
 Working in Razor Pages day to day, I use System.ComponentModel.DataAnnotations quite a lot, letting the model binder and ModelState validation do as much work as possible. I don't use MVC as often but I went with the same approach here.
+
+# Task 5
+I felt that for the best user experience and reducing backends calls, doing this with js would be best. I added a checkbox at the top of the list that allows a user to toggle which tasks are visible. I've added a separate script file as I avoid inline js that would break by adding Content Security Policy.
