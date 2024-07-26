@@ -55,3 +55,7 @@ These could be parameters that we tailor using configuration & IOptionsSnapshot,
 Caching would also be useful here but it would depend on our requirements and scale. I.e. single server deployment with an InMemory cache vs multiple web applications using a distributed cache. I believe that's past the scope of this technical challenge.
 
 I added a method to Gravatar.cs to convert email addresses to SHA256 hashes. I've updated _LoginPartial and Detail to display the image from the avatar_url (didn't spend time on styling). Would consider a partial view/reusable component if spending more time and displaying this in more places in the application.
+
+# Task 9
+I typically work in Razor Pages and use as much built-in model binding and validation as possible. Additionally using Razor for forms based flows feels more intuitive to me. Using javascript is helpful for some things, but I prefer to avoid using it for this when ASP.NET does so much for us already. I made a start but since I have limited time left, I'm going to move on to task 10.
+I've left some code showing what my intentions were. I added a partial view _CreateTodoItem and am rendering it on Detail.cshtml dependant on a button click. I started hooking into the submit event of the form. This is where I've stopped, before writing the ajax, creating an endpoint to process the POST, and rendering the results on the DOM.

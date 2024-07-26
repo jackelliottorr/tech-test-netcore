@@ -1,10 +1,12 @@
 ﻿@using Todo.Controllers
+@using Todo.Data
 @using Todo.Data.Entities
 @using Todo.GravatarConnector
 @using Todo.Services
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @inject IProfileService ProfileService
+@inject ApplicationDbContext dbContext
 
 @{
     ViewData["Title"] = $"List: {Model.Title}";
@@ -94,10 +96,14 @@
             <strong>Add New Item</strong>
         </a>
     </div>
+
+    @*<partial name="_CreateTodoItem" model="new Todo.Models.TodoItems.TodoItemCreateFields()" />
+    <button id="btnShowCreateForm">Add New Item</button> *@
 </div>
 
 @section Scripts
 {
     <script src="~/js/hideCompletedTodoItems.js"></script>
     <script src="~/js/orderByRank.js"></script>
+    @* <script src="~/js/createItem.js"></script> *@
 }
