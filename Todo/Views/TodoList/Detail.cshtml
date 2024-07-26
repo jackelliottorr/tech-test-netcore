@@ -11,6 +11,11 @@
 
 <div class="col-md-6">
 
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="toggleCompleted" onchange="toggleCompletedTodoItems()">
+        <label class="form-check-label" id="lblToggleCompleted" for="toggleCompleted">Hide completed todo items</label>
+    </div>
+
     <ul class="list-group">
 
         <li class="list-group-item">
@@ -35,7 +40,8 @@
                     break;
             }
 
-            <li class="list-group-item @contextualClass">
+            <li class="list-group-item @contextualClass"
+                data-completed="@(item.IsDone ? "true" : "false")">
                 
                 <div class="row">
 
@@ -67,3 +73,8 @@
         }
     </ul>
 </div>
+
+@section Scripts
+{
+    <script src="~/js/hideCompletedTodoItems.js"></script>
+}
