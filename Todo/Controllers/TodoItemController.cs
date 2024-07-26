@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Data;
@@ -67,7 +68,26 @@ namespace Todo.Controllers
 
         private RedirectToActionResult RedirectToListDetail(int fieldsTodoListId)
         {
-            return RedirectToAction("Detail", "TodoList", new {todoListId = fieldsTodoListId});
+            return RedirectToAction("Detail", "TodoList", new { todoListId = fieldsTodoListId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRank([FromBody] RankUpdateModel rankUpdate)
+        {
+            var todoItem = dbContext.SingleTodoItem(rankUpdate.Id);
+            if (todoItem != null)
+            {
+                todoItem.Rank = rankUpdate.Rank;
+                dbContext.Update(todoItem);
+                await dbContext.SaveChangesAsync();
+            }
+            return Json(new { success = true });
+        }
+    }
+
+    public class RankUpdateModel
+    {
+        public int Id { get; set; }
+        public int Rank { get; set; }
     }
 }

@@ -59,3 +59,7 @@ I added a method to Gravatar.cs to convert email addresses to SHA256 hashes. I'v
 # Task 9
 I typically work in Razor Pages and use as much built-in model binding and validation as possible. Additionally using Razor for forms based flows feels more intuitive to me. Using javascript is helpful for some things, but I prefer to avoid using it for this when ASP.NET does so much for us already. I made a start but since I have limited time left, I'm going to move on to task 10.
 I've left some code showing what my intentions were. I added a partial view _CreateTodoItem and am rendering it on Detail.cshtml dependant on a button click. I started hooking into the submit event of the form. This is where I've stopped, before writing the ajax, creating an endpoint to process the POST, and rendering the results on the DOM.
+
+# Task 10
+I wasn't 100% sure how to approach this as really I tend to do more backend work and less javascript. I found a few drag and drop components online that would work well for this, using jqueryui for example. I've spent 4-5 hours now though so I'm putting in a quick solution.
+I've added an input to the Detail page for each item, with javascript wiring up an AJAX fetch to an endpoint anytime the values are updated. If I was spending any more time on this, after the AJAX call, I'd change the data-rank attribute value and call the sort function again. Then, I wouldn't have to force a page load to see the new rank. I've discussed other things I'd do in my Task 7 comments as well.
