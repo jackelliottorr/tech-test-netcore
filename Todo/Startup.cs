@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Todo.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using Todo.Data;
+using Todo.GravatarConnector;
+using Todo.Infrastructure;
 
 namespace Todo
 {
@@ -45,6 +48,16 @@ namespace Todo
                     .RequireAuthenticatedUser()
                     .Build();
             });
+
+
+            var gravatarApiOptions = Configuration.GetSection("GravatarApi").Get<GravatarApiOptions>();
+            services.AddHttpClient<IProfileService, GravatarProfileService>(client =>
+            {
+                client.BaseAddress = new Uri(gravatarApiOptions.BaseUrl);
+                client.DefaultRequestHeaders.Add("Accept", gravatarApiOptions.AcceptHeader);
+            })
+            .AddPolicyHandler(PolicyProvider.GetRetryPolicy())
+            .AddPolicyHandler(PolicyProvider.GetCircuitBreakerPolicy());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

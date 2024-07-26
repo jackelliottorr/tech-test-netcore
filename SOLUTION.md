@@ -42,3 +42,16 @@ I removed "Add new item" from the list and made it a button for 2 reasons:
 2. It reduces the complexity of the JavaScript sorting code as I don't have to account for that list item.
 
 Given that an earlier requirement was to implement sorting by importance, I made sure that ranked sorting didn't affect this. Items are sorted primarily by rank, then by importance within a rank.
+
+# Task 8
+Implemented a client for https://docs.gravatar.com/api/profiles/rest-api/. BaseUrl and other configurable options are injected using the IOptions pattern. 
+I opted for unauthenticated requests to avoid having to create an account and application. In the real world, I'd probably store the API key in Azure Key Vault with application access via Managed Identity.
+
+IProfileService is coupled to GravatarProfile but if I was spending more time I'd make it more generic. This would be to support profiles from third parties other than Gravatar. However, this would involve storing where a user has a profile and likely a factory to return the correct client/service.
+
+Given their aggressive rate limiting on unauthenticated requests, I've added some basic Polly policies. I've added retries on transient http failures with exponential backoff. However, I've also added a conservative circuit breaker policy to reduce the chances of getting rate limited.
+These could be parameters that we tailor using configuration & IOptionsSnapshot, or an external service. The values could be a lot different for production so I didn't spend as much time on them. Also, knowing which rate limiting algorithm they use would be helpful. Or if they used rate limiting headers to inform clients of requests before being rate limited, etc.
+
+Caching would also be useful here but it would depend on our requirements and scale. I.e. single server deployment with an InMemory cache vs multiple web applications using a distributed cache. I believe that's past the scope of this technical challenge.
+
+I added a method to Gravatar.cs to convert email addresses to SHA256 hashes. I've updated _LoginPartial and Detail to display the image from the avatar_url (didn't spend time on styling). Would consider a partial view/reusable component if spending more time and displaying this in more places in the application.

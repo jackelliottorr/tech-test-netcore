@@ -1,7 +1,10 @@
 ﻿@using Todo.Controllers
 @using Todo.Data.Entities
+@using Todo.GravatarConnector
 @using Todo.Services
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
+
+@inject IProfileService ProfileService
 
 @{
     ViewData["Title"] = $"List: {Model.Title}";
@@ -63,10 +66,21 @@
 
                     <div class="col-md-4 text-right">
                         <small>
-                            @item.ResponsibleParty.UserName
+                            @{
+                                var imageSrc = "https://www.gravatar.com/avatar/@gravatarhash?s=30";
+                                var displayName = item.ResponsibleParty.UserName;
+                                var gravatarhash = Gravatar.GetSHA256Hash(item.ResponsibleParty.Email);
+                                var profile = await ProfileService.GetProfileAsync(gravatarhash);
+                                if (profile != null)
+                                {
+                                    displayName = $"{profile.DisplayName} ({item.ResponsibleParty.Email})";
+                                    imageSrc = profile.AvatarUrl;
+                                };
+                            }
 
-                            <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+                            @displayName
 
+                            <img src="@imageSrc" />
                         </small>
                     </div>
                 </div>

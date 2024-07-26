@@ -1,25 +1,32 @@
 @using Microsoft.AspNetCore.Identity
+@using Todo.GravatarConnector
 @using Todo.Services
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject IProfileService ProfileService
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var imageSrc = "https://www.gravatar.com/avatar/@gravatarhash?s=30";
+    var iu = await UserManager.GetUserAsync(User);
+    var displayName = UserManager.GetUserName(User);
+
+    var emailAddress = await UserManager.GetEmailAsync(iu);
+    var gravatarhash = Gravatar.GetSHA256Hash(emailAddress);
+    var profile = await ProfileService.GetProfileAsync(gravatarhash);
+    if (profile != null)
+    {
+        displayName = $"{profile.DisplayName} ({emailAddress})";
+        imageSrc = profile.AvatarUrl;
+    };
+
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-
-                    @{
-
-                        var iu = await UserManager.GetUserAsync(User);
-                        var emailAddress = await UserManager.GetEmailAsync(iu);
-                        var gravatarhash = Gravatar.GetHash(emailAddress);
-                    }
-
-                    <img src="https://www.gravatar.com/avatar/@gravatarhash?s=30" />
-                    @UserManager.GetUserName(User)
+                    <img src="@imageSrc" />
+                    @displayName
                 </a>
             </li>
             <li>
